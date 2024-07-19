@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Description">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>JSON</title>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script src="/assets/js/vue.global.js"></script>
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/bootstrap/bootstrap.min.js"></script>
+    <script src="/assets/bootstrap/bootbox.min.js"></script>
+    <script src="/assets/jsoneditor/jsoneditor.js"></script>
+    <script src="/global.js"></script>
+    <script src="/assets/js/json-to-go.js"></script>
+    <link type="text/css" rel="stylesheet" href="/assets/bootstrap/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/assets/jsoneditor/jsoneditor.css">
+    <link type="text/css" rel="stylesheet" href="/global.css">
+    <script type="text/javascript">
+        window.VueObject = null
+        window.VueMount = "#app"
+        window.Vm = null
+        window.PageData =  null
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            if (typeof startWork == "function") {
+                startWork()
+            }
+            setTimeout(() => {
+                if (window.VueObject != null) {
+                    window.Vm = mountVueObject(window.VueObject, window.VueMount)
+                }
+            }, 10)
+        }, false);
+    </script>
+</head>
+
+<body>
+<div id="app"></div>
+<template id="template">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="jsoneditor" style="width: 100%; height: calc(100vh - 120px);"></div>
+            <div style=" text-align: center;margin-top:20px">
+                 <button type="button" @click="loadJSON" class="btn btn-primary">加载JSON文件</button>
+                <button type="button" @click="saveJSON" class="btn btn-primary" style="margin-left:10px">保存</button>
+                <button type="button" @click="json2Go" class="btn btn-primary" style="margin-left:10px">转Go Struct</button>
+                <button type="button" style="margin-left:10px" @click="json2String" class="btn btn-primary">转字符串</button>
+            </div>
+        </div>
+    </div>
+</template>
+<script defer>
+    var jsonEditor = null;
+    function getInitJSON() {
+        try {
+            let value = localStorage.getItem("json-editor") || '{}'
+            return JSON.parse(value)
+        } catch (e) {
+            return {}
+        }
+    }
+    function setJSON(value) {
+        if (value == null) {
+            localStorage.removeItem("json-editor")
+            return
+        }
+        if (typeof value !== "string") {
+            value = JSON.stringify(value)
+        }
+        localStorage.setItem("json-editor", value)
+    }
+    window.VueObject = {
+        data() {
+            return {
+                content: '',
+            }
+        },
+        template: '#template',
+        async mounted() {
+            this.initGetJSON()
+        },
+        methods: {
+            async initGetJSON() {
+                const container = document.getElementById("jsoneditor")
+                const options = {
+                    "mode": "code",
+                    "search": true,
+                    "indentation": 4,
+                    "onChangeText": (json) => {
+                        setJSON(json)
+                    }
+                }
+                jsonEditor = new JSONEditor(container, options, getInitJSON())
+            },
+            async saveJSON() {
+                bootbox.prompt("请输入文件名", (fname) => {
+                    if (fname == null || fname == '') {
+                        return true
+                    }
+                    if (fname.indexOf(".") === -1) {
+                        fname = fname + ".json"
+                    } else {
+                        if (fname.split('.').pop().toLowerCase() === "json") {
+                            // Nothing to do
+                        } else {
+                            fname = fname.split('.')[0] + ".json"
+                        }
+                    }
+                    saveFile(JSON.stringify(jsonEditor.get()), fname)
+                })
+            },
+            async json2Go() {
+                let result = jsonToGo(JSON.stringify(jsonEditor.get()), null, null, false)
+                let dialog = bootbox.dialog({
+                    title: '转换结果',
+                    message: '<textarea class="form-control" rows=27>' + result.go + '</textarea>',
+                    closeButton: true,
+                    size: 'large'
+                });
+            },
+            async json2String() {
+               jsonEditor.set(JSON.stringify(jsonEditor.get()))
+            },
+            async loadJSON() {
+                const [fileHandle] = await window.showOpenFilePicker({
+                    multiple: false,
+                    types: [
+                        {
+                            description: 'json',
+                            accept: {
+                                'text/*': ['.json']
+                            }
+                        },
+                    ],
+                });
+
+                const file = await fileHandle.getFile();
+                const content = await file.text();
+                try {
+                    jsonEditor.set(JSON.parse(content))
+                    setJSON(content)
+                } catch (e) {
+                    bootbox.alert("JSON格式错误！")
+                }
+            }
+        }
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,4 +1,4 @@
 #!/bin/sh
-rm -f /build/
-mkdir -p /build
-cp -r ./* /build
+tar -cvf tmp.tar ./*
+mkdir -p ./build
+tar -xvf tmp.tar -C ./build

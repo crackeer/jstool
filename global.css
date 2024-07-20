@@ -3,10 +3,6 @@ body {
   font-family: "Georgia,serif";
 }
 
-.link-list a {
-  display: inline-block;
-  margin: 0 10px;
-}
 
 textarea {
   min-width: 100%;
@@ -23,16 +19,6 @@ textarea {
 
 .bytemd {
   height: calc(100vh - 200px) !important;
-}
-
-.bookmark {
-  display: block;
-  padding: 4px;
-  margin-bottom: 5px;
-  background-color: #fff;
-  -webkit-transition: border 0.2s ease-in-out;
-  -o-transition: border 0.2s ease-in-out;
-  transition: border 0.2s ease-in-out;
 }
 
 a {

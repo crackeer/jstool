@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,17 +18,12 @@
     <script src="/assets/js/json-to-go.js"></script>
     <link type="text/css" rel="stylesheet" href="/assets/bootstrap/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="/assets/jsoneditor/jsoneditor.css">
-    <link type="text/css" rel="stylesheet" href="/global.css">
     <script type="text/javascript">
         window.VueObject = null
         window.VueMount = "#app"
         window.Vm = null
-        window.PageData =  null
 
         document.addEventListener("DOMContentLoaded", async () => {
-            if (typeof startWork == "function") {
-                startWork()
-            }
             setTimeout(() => {
                 if (window.VueObject != null) {
                     window.Vm = mountVueObject(window.VueObject, window.VueMount)
@@ -40,18 +34,23 @@
 </head>
 
 <body>
-<div id="app"></div>
+    <div id="app"></div>
+</body>
 <template id="template">
     <div class="row">
         <div class="col-md-12">
-            <div id="jsoneditor" style="width: 100%; height: calc(100vh - 120px);"></div>
-            <div style=" text-align: center;margin-top:20px">
-                 <button type="button" @click="loadJSON" class="btn btn-primary">加载JSON文件</button>
-                <button type="button" @click="saveJSON" class="btn btn-primary" style="margin-left:10px">保存</button>
-                <button type="button" @click="json2Go" class="btn btn-primary" style="margin-left:10px">转Go Struct</button>
-                <button type="button" style="margin-left:10px" @click="json2String" class="btn btn-primary">转字符串</button>
+            <div id="jsoneditor" style="width: 100%; height: calc(100vh - 80px);"></div>
+            <div role="group" aria-label="..." id="btn-group-div">
+                <button type="button" @click="loadJSON" class="btn btn-primary">加载JSON文件</button>
+                <button type="button" @click="saveJSON" class="btn btn-primary">保存到文件</button>
+                <button type="button" @click="json2Go" class="btn btn-primary">转GoStruct</button>
+                <button type="button" @click="json2String" class="btn btn-primary">转字符串</button>
+                <button type="button" @click="revertJSON2String" class="btn btn-primary">反转字符串</button>
+                <button type="button" @click="copyToClipboard" class="btn btn-primary">复制到剪贴板</button>
+                <button type="button" @click="clearJSON" class="btn btn-primary">清空</button>
             </div>
         </div>
+    </div>
     </div>
 </template>
 <script defer>
@@ -65,14 +64,7 @@
         }
     }
     function setJSON(value) {
-        if (value == null) {
-            localStorage.removeItem("json-editor")
-            return
-        }
-        if (typeof value !== "string") {
-            value = JSON.stringify(value)
-        }
-        localStorage.setItem("json-editor", value)
+        localStorage.setItem("json-editor", JSON.stringify(value))
     }
     window.VueObject = {
         data() {
@@ -91,7 +83,8 @@
                     "mode": "code",
                     "search": true,
                     "indentation": 4,
-                    "onChangeText": (json) => {
+                    "onValidate": (json) => {
+                        console.log('onValidate', json)
                         setJSON(json)
                     }
                 }
@@ -118,13 +111,24 @@
                 let result = jsonToGo(JSON.stringify(jsonEditor.get()), null, null, false)
                 let dialog = bootbox.dialog({
                     title: '转换结果',
-                    message: '<textarea class="form-control" rows=27>' + result.go + '</textarea>',
+                    message: '<textarea class="form-control" rows=20>' + result.go + '</textarea>',
                     closeButton: true,
-                    size: 'large'
+                    size: 'large',
+                    onEscape: true,
                 });
             },
             async json2String() {
-               jsonEditor.set(JSON.stringify(jsonEditor.get()))
+                jsonEditor.set(JSON.stringify(jsonEditor.get()))
+            },
+            async clearJSON() {
+                jsonEditor.set({})
+            },
+            async revertJSON2String() {
+                try {
+                    jsonEditor.set(JSON.parse(jsonEditor.get()))
+                } catch (e) {
+                    bootbox.alert("JSON格式错误！")
+                }
             },
             async loadJSON() {
                 const [fileHandle] = await window.showOpenFilePicker({
@@ -143,15 +147,39 @@
                 const content = await file.text();
                 try {
                     jsonEditor.set(JSON.parse(content))
-                    setJSON(content)
                 } catch (e) {
                     bootbox.alert("JSON格式错误！")
                 }
+            },
+            async copyToClipboard() {
+                let text = JSON.stringify(jsonEditor.get())
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        bootbox.alert("复制成功！")
+                    })
+                    .catch(err => {
+                        // This can happen if the user denies clipboard permissions:
+                        console.error('Could not copy text: ', err);
+                    });
             }
+
         }
     }
 
 </script>
-</body>
+<style type="text/css">
+    body {
+        padding: 10px 15px;
+    }
+
+    #btn-group-div .btn {
+        margin-right: 10px !important;
+    }
+
+    #btn-group-div {
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
 
 </html>

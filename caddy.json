@@ -13,7 +13,7 @@
                 "static": {
                     "idle_timeout": 30000000000,
                     "listen": [
-                        "0.0.0.0:8080"
+                        "0.0.0.0:9090"
                     ],
                     "max_header_bytes": 10240000,
                     "read_header_timeout": 10000000000,

@@ -12,6 +12,12 @@ function getAllQuery() {
     return retData
 }
 
+function pushStateWith(query) {
+    let newURL = window.location.pathname + "?" + httpBuildQuery(query)
+    window.history.pushState(null, "", newURL)
+}
+
+
 function randomKey(t) {
     return crypto.getRandomValues(new Uint8Array(t)).reduce(((t, e) => t += (e &= 63) < 36 ? e.toString(36) : e < 62 ? (e - 26).toString(36).toUpperCase() : e > 62 ? "-" : "_"), "")
 }
@@ -41,47 +47,6 @@ function cloneObject(data) {
     return JSON.parse(raws)
 }
 
-function initMarkdownEditor(target, value, callback) {
-    if (window.byteEditor != undefined) {
-        window.byteEditor.$set({ value: value });
-        return
-    }
-
-    setTimeout(() => {
-        window.byteEditor = new bytemd.Editor({
-            target: document.getElementById(target),
-            props: {
-                value: value,
-                plugins: [
-                    bytemdPluginGfm(), bytemdPluginHighlight()
-                ],
-            },
-        });
-
-        window.byteEditor.$on('change', (e) => {
-            console.log(e.detail.value)
-            window.byteEditor.$set({ value: e.detail.value });
-            callback && callback(e.detail.value)
-            window.byteEditorValue = e.detail.value;
-        });
-    }, 200)
-
-}
-function getMarkdownValue() {
-    return window.byteEditorValue
-}
-
-function initMarkdownPreview(target, value) {
-    new bytemd.Viewer({
-        target: document.getElementById(target),
-        props: {
-            value: value,
-            plugins: [
-                bytemdPluginGfm(), bytemdPluginHighlight()
-            ]
-        },
-    });
-}
 
 function saveFile(data, name) {
     //Blob为js的一个对象，表示一个不可变的, 原始数据的类似文件对象，这是创建文件中不可缺少的！
@@ -157,10 +122,6 @@ function initCodeEditor(target, lang, value) {
             automaticLayout: true,
         });
     });
-}
-
-function getCodeEditorHeight() {
-    return window.screen.height - 300
 }
 
 function formatUnix(ts) {

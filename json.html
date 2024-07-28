@@ -19,22 +19,13 @@
     <link type="text/css" rel="stylesheet" href="/assets/bootstrap/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="/assets/jsoneditor/jsoneditor.css">
     <script type="text/javascript">
-        window.VueObject = null
-        window.VueMount = "#app"
-        window.Vm = null
-
-        document.addEventListener("DOMContentLoaded", async () => {
-            setTimeout(() => {
-                if (window.VueObject != null) {
-                    window.Vm = mountVueObject(window.VueObject, window.VueMount)
-                }
-            }, 10)
-        }, false);
+        window.VueMount = "#app"        
     </script>
 </head>
 
 <body>
     <div id="app"></div>
+    <script type="text/notebook-cell" id="js-code-id">console.log(windows.jsInput);</script>
 </body>
 <template id="template">
     <div class="row">
@@ -65,6 +56,11 @@
     function setJSON(value) {
         localStorage.setItem("json-editor", JSON.stringify(value))
     }
+    document.addEventListener("DOMContentLoaded", async () => {
+        setTimeout(() => {
+            mountVueObject(window.VueObject, window.VueMount)
+        }, 10)
+    }, false);
     window.VueObject = {
         data() {
             return {
@@ -160,8 +156,7 @@
                         // This can happen if the user denies clipboard permissions:
                         console.error('Could not copy text: ', err);
                     });
-            }
-
+            },
         }
     }
 

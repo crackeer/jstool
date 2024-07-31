@@ -126,3 +126,27 @@ function formatUnix(ts) {
 function getNowTime() {
     return dayjs().format('YYYY-MM-DD HH:mm:ss')
 }
+
+var tagRegex = /^#([\S\s]+)/;
+var hrefRegex = /^\-\s\[([\S\w\s\W]*)\]\((\S+)\)/;
+function parseMarkdownBlock(text) {
+    let data = text.split('\n')
+    let current_tag = '未知'
+    let links = []
+    for (let i = 0; i < data.length; i++) {
+        let tags = data[i].match(tagRegex)
+        if (tags !=null && tags.length != undefined && tags.length > 1) {
+            current_tag = tags[1].trim()
+        }
+        let href = data[i].match(hrefRegex)
+        console.log(href, data[i])
+        if (href != null && href.length != undefined && href.length > 2) {
+            links.push({
+                title : href[1].trim(),
+                href : href[2].trim(),
+                tag : current_tag
+            })
+        }
+    }
+    return links
+}

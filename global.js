@@ -100,15 +100,7 @@ function mountVueObject(object, element) {
     vm.mount(element)
     return vm
 }
-async function httpRequest(method, url, data, headers) {
-    let result = await axios.post("/api/http/handle", {
-        "url": url,
-        "method": method,
-        "body": data,
-        "headers": headers,
-    })
-    return result.data
-}
+
 
 function initCodeEditor(target, lang, value) {
     document.getElementById(target).style.height = getCodeEditorHeight() + 'px'

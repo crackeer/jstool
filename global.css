@@ -29,3 +29,7 @@ thead {
   top: 0;
   background: #f8f8f8;
 }
+
+li {
+  padding: 7.5px 0;
+}

@@ -1,10 +1,4 @@
----
-title: 一些shell使用
-date: 2024-08-18
-slug: 2024-08-18-16-05-25
-categories:
-  - shell
----
+> https://b3log.org/vditor/demo/preview.html
 
 
 # jq解析json
@@ -143,7 +137,7 @@ do
 done
 ```
 
-# ssh查看连接过程
+## ssh查看连接过程
 
 ```sh
 ssh -vT git@github.com

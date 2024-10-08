@@ -147,7 +147,7 @@ var replaceString = function (str, keywords) {
     }
     return str
 }
-var hightlightText = function (keywords) {
+var highlightText = function (keywords) {
     document.querySelectorAll('p').forEach(function (item) {
         item.innerHTML = replaceString(item.innerHTML, keywords)
     })
@@ -159,7 +159,7 @@ var hightlightText = function (keywords) {
     })
 }
 document.addEventListener("DOMContentLoaded", async () => {
-    hightlightText(['Golang', 'lavavel', 'PHP', 'Gin', 'GORM', 'MySQL', 'Redis', 'OpenAPI', '微博', '贝壳', 'Kafka'])
+    highlightText(['Golang', 'lavavel', 'PHP', 'Gin', 'GORM', 'MySQL', 'Redis', 'OpenAPI', '微博', '贝壳', 'Kafka'])
 })
 </script>
 </html>

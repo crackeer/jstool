@@ -19,7 +19,7 @@
             padding: 10px 6%;
         }
         p img {
-            margin: 10px auto;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -29,9 +29,10 @@
 </body>
 <template id="template">
     <div style="margin: 30px auto;">
-        <textarea class="form-control" placeholder="搜索文本" v-model="value" @input="convert" rows="5"></textarea>
+        <textarea class="form-control" placeholder="请输入" v-model="value" @input="convert" rows="5"></textarea>
+        <p id="qrcode"></p>
     </div>
-    <p id="qrcode"></p>
+   
 </template>
 <script defer>  
     window.VueMount = "#app"
@@ -51,8 +52,8 @@
             this.value = getQuery('value', 'http://baidu.com')
             qrcode = new QRCode("qrcode", {
                 text: this.value,
-                width: 328,
-                height: 328,
+                width: 350,
+                height: 350,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H

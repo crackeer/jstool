@@ -12,18 +12,67 @@
     <!-- ⚠️生产环境请指定版本号，如 https://unpkg.com/vditor@x.x.x/dist... -->
     <link rel="stylesheet" href="https://unpkg.com/vditor/dist/index.css" />
     <script src="https://unpkg.com/vditor/dist/index.min.js"></script>
-    <link rel="stylesheet" href="/global.css" />
     <link rel="stylesheet" href="/assets/bootstrap/bootstrap.min.css">
 </head>
 
 <body>
-    <div class="row">
-        <div id="outline" class="col-md-3">
-        </div>
-        <div id="preview" class="col-md-9"></div>
-    </div>
-
+    <div id="outline"></div>
+    <div id="preview"></div>
 </body>
+<style type="text/css">
+    body {
+        padding: 50px 5% 50px 2%;
+        font-family: "Georgia,serif";
+        font-size: 15px;
+    }
+
+    #outline {
+        position: fixed;
+        top: 0;
+        padding-top: 30px;
+        width: 20%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    #preview {
+        margin-left: 20%;
+    }
+
+
+    #outline ul {
+        margin-left: 16px;
+        list-style: none;
+    }
+
+    #outline>ul {
+        margin-left: 0;
+    }
+
+    #outline li>span {
+        cursor: pointer;
+        border-left: 1px solid transparent;
+        display: block;
+        padding-left: 8px;
+    }
+
+    #outline li>span.vditor-outline__item--current {
+        border-left: 1px solid #4285f4;
+        color: #4285f4;
+        background-color: #f6f8fa;
+    }
+
+    #outline li>span:hover {
+        color: #4285f4;
+        background-color: #f6f8fa;
+    }
+
+    @media (max-width: 768px) {
+        #outline {
+            display: none !important;
+        }
+    }
+</style>
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
         let result = await fetch('doc.md')

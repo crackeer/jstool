@@ -128,7 +128,7 @@ function getNowTime() {
 }
 
 var tagRegex = /^#([\S\s]+)/;
-var hrefRegex = /^\-\s\[([\S\w\s\W]*)\]\((\S+)\)/;
+var hrefRegex = /^\-\s\[([\S\w\s\W]*)\]\(([\S\s]+)\)/;
 function parseMarkdownBlock(text) {
     let data = text.split('\n')
     let current_tag = '未知'
@@ -139,13 +139,22 @@ function parseMarkdownBlock(text) {
             current_tag = tags[1].trim()
         }
         let href = data[i].match(hrefRegex)
-        console.log(href, data[i])
         if (href != null && href.length != undefined && href.length > 2) {
-            links.push({
+            let parts = href[2].trim().split(' ')
+            let tmp = {
                 title : href[1].trim(),
-                href : href[2].trim(),
-                tag : current_tag
-            })
+                href : parts[0].trim(),
+                tag : current_tag,
+                class : ''
+            }
+
+
+
+            if (parts.length > 1) {
+                tmp['class'] = parts[1].trim()
+            }
+            console.log(tmp)
+            links.push(tmp)
         }
     }
     return links

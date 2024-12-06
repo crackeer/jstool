@@ -21,7 +21,6 @@
 - [代码转图片](https://carbon.now.sh/)
 - [开发者工具，各种转换工具](https://www.btool.cn/)
 - [GPT-free2gpt](https://chat9.free2gpt.xyz/)
-- [chatgot](https://start.chatgot.io/)
 - [JSON转Markdown](https://tableconvert.com/zh-cn/json-to-markdown)
 - [一些不好用键盘打出来的字符](https://copychar.cc/)
 - [各种链接linkHunts](https://ln.ht/)
@@ -51,6 +50,8 @@
 
 - [tauri-app](https://tauri.app/develop/)
 - [rust-language](https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html)
+- [next-js](https://nextjs.org/)
+- [ant-design](https://ant.design/)
 
 # 个人网站 / 社区
 
